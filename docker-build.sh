@@ -1,9 +1,26 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
 
-IMAGE_NAME="hu-placeholder-api"
-IMAGE_TAG="${1:-latest}"
+# Detener el script si ocurre algún error
+set -e
 
-./mvnw package -DskipTests -q
-docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" .
-echo "Built ${IMAGE_NAME}:${IMAGE_TAG}"
+# Nombre de la imagen
+IMAGE_NAME="placeholder-api"
+
+# Leer la versión desde el archivo VERSION
+if [ -f "VERSION" ]; then
+    VERSION=$(cat VERSION)
+else
+    echo "WARN! Archivo VERSION no encontrado. Se usa local"
+    VERSION="local"
+fi
+
+echo "Construyendo imagen $IMAGE_NAME con versión: $VERSION"
+
+# Build de la imagen Docker
+# Usa -t para etiquetar con nombre:version
+docker build --platform linux/amd64 -t "$IMAGE_NAME:$VERSION" .
+
+# (Opcional) Etiquetar también como 'latest'
+docker tag "$IMAGE_NAME:$VERSION" "$IMAGE_NAME:latest"
+
+echo "Imagen $IMAGE_NAME:$VERSION construida exitosamente."
