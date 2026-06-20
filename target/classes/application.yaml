@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: ${OTEL_SERVICE_NAME:hu-placeholder-api}
+    profiles: ${ENVIRONMENT:default}
+server:
+  servlet:
+    context-path: /placeholder
+management:
+  opentelemetry:
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+  otlp:
+    metrics:
+      export:
+        url: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+  tracing:
+    sampling:
+      probability: 1.0
