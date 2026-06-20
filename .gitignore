@@ -30,6 +30,7 @@ replay_pid*
 /storage/pail
 .env.backup
 .env.production
+.env
 auth.json
 
 
